@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"testing"
 
 	"github.com/cappyzawa/go-versions"
@@ -22,6 +23,12 @@ func TestCliRun(t *testing.T) {
 			versions:  []string{"go1", "go2"},
 			expect:    statusOK,
 			expectOut: "go1\ngo2\n",
+		},
+		"failed to get go versions": {
+			args:        nil,
+			versionsErr: fmt.Errorf("some error"),
+			expect:      statusVersionsErr,
+			expectErr:   "failed to get go versions: some error\n",
 		},
 	}
 
