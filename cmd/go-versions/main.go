@@ -11,6 +11,7 @@ import (
 const (
 	statusOK = iota
 	statusVersionsErr
+	statusNoVersionsErr
 )
 
 type cli struct {
@@ -25,6 +26,10 @@ func (c *cli) Run(args []string) int {
 		fmt.Fprintf(c.err, "failed to get go versions: %v\n", err)
 		return statusVersionsErr
 	}
+	if len(versions) == 0 {
+		fmt.Fprintf(c.err, "there is no go versions\n")
+		return statusNoVersionsErr
+	}
 	for _, v := range versions {
 		fmt.Fprintf(c.out, "%s\n", v)
 	}
@@ -35,7 +40,7 @@ func main() {
 	c := &cli{
 		out:    os.Stdout,
 		err:    os.Stderr,
-		client: versions.NewClient(),
+		client: versions.NewClient(&versions.Config{}),
 	}
 	os.Exit(c.Run(os.Args))
 }

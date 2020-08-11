@@ -14,21 +14,37 @@ type Client interface {
 }
 
 type client struct {
-	url        url.URL
+	url        *url.URL
 	httpClient *http.Client
 }
 
+// Config describes config for client
+type Config struct {
+	URL        *url.URL
+	HTTPClient *http.Client
+}
+
 // NewClient initializes the client
-func NewClient() Client {
+func NewClient(config *Config) Client {
 	c := defaultClient()
-	return c
+	if config.URL == nil {
+		config.URL = c.url
+	}
+	if config.HTTPClient == nil {
+		config.HTTPClient = c.httpClient
+	}
+	return &client{
+		url:        config.URL,
+		httpClient: config.HTTPClient,
+	}
 }
 
 func defaultClient() *client {
-	u := url.URL{}
-	u.Scheme = "https"
-	u.Host = "golang.org"
-	u.Path = "dl"
+	u := &url.URL{
+		Scheme: "https",
+		Host:   "golang.org",
+		Path:   "dl",
+	}
 	return &client{
 		url:        u,
 		httpClient: http.DefaultClient,
