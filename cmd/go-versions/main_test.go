@@ -54,6 +54,11 @@ func TestCliRun(t *testing.T) {
 			expect:    statusOK,
 			expectOut: "https://golang.org/dl/go1.14.7.linux-amd64.tar.gz\n",
 		},
+		"invalid args": {
+			args:      []string{"command", "-invalid", "args"},
+			expect:    statusParseFlagErr,
+			expectErr: "failed to parse flags: flag provided but not defined: -invalid\n",
+		},
 		"failed to get go versions": {
 			args:        []string{"command"},
 			versionsErr: fmt.Errorf("some error"),
