@@ -30,6 +30,12 @@ func TestCliRun(t *testing.T) {
 			expect:      statusVersionsErr,
 			expectErr:   "failed to get go versions: some error\n",
 		},
+		"there is no go versions": {
+			args:      nil,
+			versions:  []string{},
+			expect:    statusNoVersionsErr,
+			expectErr: "there is no go versions\n",
+		},
 	}
 
 	for name, test := range cases {
@@ -55,7 +61,7 @@ func TestCliRun(t *testing.T) {
 				t.Errorf("output should be %s, but it is %s", test.expectOut, outBuf.String())
 			}
 			if errBuf.String() != test.expectErr {
-				t.Errorf("errput should be %s, but it is %s", test.expectErr, errBuf.String())
+				t.Errorf("error should be %s, but it is %s", test.expectErr, errBuf.String())
 			}
 		})
 	}
