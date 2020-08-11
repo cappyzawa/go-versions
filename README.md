@@ -6,3 +6,19 @@
 [![codecov](https://codecov.io/gh/cappyzawa/go-versions/branch/master/graph/badge.svg)](https://codecov.io/gh/cappyzawa/go-versions)
 
 This tool gets go versions from [Downloads \- The Go Programming Language](https://golang.org/doc/).
+
+## How to use
+
+```bash
+# no fileter
+go-versions
+
+# fileter: os=linux
+go-versions -os linux
+
+# fileter: arch=amd64
+go-versions -arch amd64
+
+# fileter: os=linux arch=amd64
+go-versions -os linux -arch amd64
+```
