@@ -19,7 +19,7 @@ jobs:
         go-version: ${{ matrix.go }}
     - uses: actions/checkout@master
     - name: go test
-      run: "go test -v -race -coverprofile=coverage.txt -covermode=atomic ./..."
+      run: "AT=true go test -v -race -coverprofile=coverage.txt -covermode=atomic ./..."
     - uses: codecov/codecov-action@v1
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
