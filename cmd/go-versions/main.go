@@ -17,12 +17,6 @@ const (
 	statusNoVersionsErr
 )
 
-var (
-	goos   string
-	goarch string
-	rc     bool
-)
-
 type cli struct {
 	err    io.Writer
 	out    io.Writer
@@ -30,6 +24,10 @@ type cli struct {
 }
 
 func (c *cli) Run(args []string) int {
+	var (
+		goos   string
+		goarch string
+	)
 	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
 	flags.StringVar(&goos, "os", "", "select os")
 	flags.StringVar(&goarch, "arch", "", "select arch")
