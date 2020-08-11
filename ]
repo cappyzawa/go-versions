@@ -4,23 +4,20 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"os"
-	"strings"
+  "os"
 
 	"github.com/cappyzawa/go-versions"
 )
 
 const (
 	statusOK = iota
-	statusParseFlagErr
 	statusVersionsErr
 	statusNoVersionsErr
 )
 
 var (
-	goos   string
-	goarch string
-	rc     bool
+	os   string
+	arch string
 )
 
 type cli struct {
@@ -31,12 +28,8 @@ type cli struct {
 
 func (c *cli) Run(args []string) int {
 	flags := flag.NewFlagSet(args[0], flag.ContinueOnError)
-	flags.StringVar(&goos, "os", "", "select os")
-	flags.StringVar(&goarch, "arch", "", "select arch")
-	if err := flags.Parse(args[1:]); err != nil {
-		fmt.Fprintf(c.err, "failed to parse flags: %v\n", err)
-		return statusParseFlagErr
-	}
+	flags.StringVar(&os, "os", "", "select os")
+	flags.StringVar(&arch, "arch", "", "select arch")
 
 	versions, err := c.client.List()
 	if err != nil {
@@ -47,11 +40,8 @@ func (c *cli) Run(args []string) int {
 		fmt.Fprintf(c.err, "there is no go versions\n")
 		return statusNoVersionsErr
 	}
-
 	for _, v := range versions {
-		if strings.Contains(v, goos) && strings.Contains(v, goarch) {
-			fmt.Fprintf(c.out, "%s\n", v)
-		}
+		fmt.Fprintf(c.out, "%s\n", v)
 	}
 	return statusOK
 }

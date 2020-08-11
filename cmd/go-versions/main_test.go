@@ -19,19 +19,49 @@ func TestCliRun(t *testing.T) {
 		expectErr   string
 	}{
 		"basic": {
-			args:      nil,
+			args:      []string{"command"},
 			versions:  []string{"go1", "go2"},
 			expect:    statusOK,
 			expectOut: "go1\ngo2\n",
 		},
+		"os is specified as linux": {
+			args: []string{"command", "-os", "linux"},
+			versions: []string{
+				"https://golang.org/dl/go1.14.7.linux-amd64.tar.gz",
+				"https://golang.org/dl/go1.14.7.windows-386.zip",
+				"https://golang.org/dl/go1.9.linux-386.tar.gz",
+			},
+			expect:    statusOK,
+			expectOut: "https://golang.org/dl/go1.14.7.linux-amd64.tar.gz\nhttps://golang.org/dl/go1.9.linux-386.tar.gz\n",
+		},
+		"arch is specified as amd64": {
+			args: []string{"command", "-arch", "amd64"},
+			versions: []string{
+				"https://golang.org/dl/go1.14.7.linux-amd64.tar.gz",
+				"https://golang.org/dl/go1.14.7.windows-386.zip",
+				"https://golang.org/dl/go1.2.2.windows-amd64.zip",
+			},
+			expect:    statusOK,
+			expectOut: "https://golang.org/dl/go1.14.7.linux-amd64.tar.gz\nhttps://golang.org/dl/go1.2.2.windows-amd64.zip\n",
+		},
+		"os and arch are specified as linux and amd64": {
+			args: []string{"command", "-os", "linux", "-arch", "amd64"},
+			versions: []string{
+				"https://golang.org/dl/go1.14.7.linux-amd64.tar.gz",
+				"https://golang.org/dl/go1.14.7.windows-386.zip",
+				"https://golang.org/dl/go1.2.2.windows-amd64.zip",
+			},
+			expect:    statusOK,
+			expectOut: "https://golang.org/dl/go1.14.7.linux-amd64.tar.gz\n",
+		},
 		"failed to get go versions": {
-			args:        nil,
+			args:        []string{"command"},
 			versionsErr: fmt.Errorf("some error"),
 			expect:      statusVersionsErr,
 			expectErr:   "failed to get go versions: some error\n",
 		},
 		"there is no go versions": {
-			args:      nil,
+			args:      []string{"command"},
 			versions:  []string{},
 			expect:    statusNoVersionsErr,
 			expectErr: "there is no go versions\n",
